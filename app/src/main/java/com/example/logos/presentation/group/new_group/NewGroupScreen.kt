@@ -1,10 +1,8 @@
-package com.example.logos.presentation.newWord
+package com.example.logos.presentation.group.new_group
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -18,25 +16,25 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.logos.ui.InputField
 
 @Composable
-fun NewWordScreen(
+fun NewGroupScreen(
 	clickAction: () -> Unit = {}
 ) {
-	val viewModel: NewWordViewModel = hiltViewModel()
+	val viewModel: NewGroupViewModel = hiltViewModel()
 
-	val wordFieldStat = remember { mutableStateOf("") }
-	val meaningFieldStat = remember { mutableStateOf("") }
+	val titleFieldState = remember { mutableStateOf("") }
 
 	Column(
 		modifier = Modifier.fillMaxSize(),
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
-		InputField(wordFieldStat)
-		Spacer(Modifier.height(20.dp))
-		InputField(meaningFieldStat)
+		InputField(
+			state = titleFieldState,
+			hint = "Group title"
+		)
 
 		ConfirmButton(
 			clickAction = {
-				viewModel.saveWord(wordFieldStat.value, meaningFieldStat.value)
+				viewModel.saveGroup(titleFieldState.value)
 				clickAction.invoke()
 			}
 		)

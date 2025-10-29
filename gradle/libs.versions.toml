@@ -28,6 +28,8 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCoreVersion = "3.6.1"
 
+timber = "5.0.1"
+
 [libraries]
 
 # Base
@@ -73,6 +75,9 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCoreVersion" }
 
+# Dev Tools
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agpVersion" }
@@ -104,5 +109,7 @@ hilt = ["hilt-core", "hilt-compose-navigation", "test-hilt"]
 network = ["retrofit", "ok-http", "retrofit-converter", "gson"]
 
 room = ["room-ktx", "room-runtime"]
+
+devtools = ["timber"]
 
 unit-test = ["junit", "androidx-junit", "androidx-espresso-core"]

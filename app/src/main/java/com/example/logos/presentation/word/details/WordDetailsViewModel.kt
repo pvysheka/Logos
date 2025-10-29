@@ -1,9 +1,9 @@
-package com.example.logos.presentation.details
+package com.example.logos.presentation.word.details
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.logos.usecase.FetchWordByIdUseCase
+import com.example.logos.usecase.word.FetchWordByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

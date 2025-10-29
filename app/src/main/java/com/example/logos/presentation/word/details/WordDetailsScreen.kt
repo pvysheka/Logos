@@ -1,4 +1,4 @@
-package com.example.logos.presentation.details
+package com.example.logos.presentation.word.details
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

@@ -53,6 +53,7 @@ dependencies {
 		implementation(bundles.hilt)
 		implementation(bundles.room)
 		implementation(bundles.network)
+		implementation(bundles.devtools)
 		testImplementation(bundles.unit.test)
 		ksp(hilt.processor)
 		ksp(room.processor)

@@ -9,11 +9,12 @@ import androidx.compose.runtime.remember
 
 @Composable
 fun InputField(
-	state: MutableState<String> = remember { mutableStateOf("") }
+	state: MutableState<String> = remember { mutableStateOf("") },
+	hint: String = ""
 ) {
 	TextField(
 		value = state.value,
-		placeholder = { Text("Enter word") },
+		placeholder = { Text(hint) },
 		onValueChange = { state.value = it }
 	)
 }

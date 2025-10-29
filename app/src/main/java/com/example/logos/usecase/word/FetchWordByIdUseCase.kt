@@ -1,7 +1,6 @@
-package com.example.logos.usecase
+package com.example.logos.usecase.word
 
 import com.example.logos.data.repositoty.DatabaseRepository
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class FetchWordByIdUseCase @Inject constructor(

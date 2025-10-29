@@ -1,9 +1,8 @@
-package com.example.logos.presentation.newWord
+package com.example.logos.presentation.word.new_word
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.logos.data.storage.entity.WordEntity
-import com.example.logos.usecase.SaveWordUseCase
+import com.example.logos.usecase.word.SaveWordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

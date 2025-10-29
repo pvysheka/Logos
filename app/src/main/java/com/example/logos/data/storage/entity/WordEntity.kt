@@ -7,9 +7,10 @@ import androidx.room.PrimaryKey
 data class WordEntity(
 	@PrimaryKey(autoGenerate = true)
 	val id: Long = 0,
+	val groupId: Long? = null,
 	val word: String,
-	val themes: List<String> = emptyList(),
 	val translations: List<String> = emptyList(),
+	val tags: List<String> = emptyList(),
 	val correctCount: Int = 0,
 	val lastModifiedTimestamp: Long = System.currentTimeMillis()
 )

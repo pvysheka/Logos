@@ -1,4 +1,4 @@
-package com.example.logos.presentation.details
+package com.example.logos.presentation.word.details
 
 import com.example.logos.data.storage.entity.WordEntity
 

@@ -1,4 +1,4 @@
-package com.example.logos.usecase
+package com.example.logos.usecase.word
 
 import com.example.logos.data.repositoty.DatabaseRepository
 import com.example.logos.data.storage.entity.WordEntity
@@ -9,6 +9,10 @@ class SaveWordUseCase @Inject constructor(
 ) {
 
 	suspend operator fun invoke(newWOrd: String, meaning: String) = databaseRepository.saveWord(
-		word = WordEntity(word = newWOrd, translations = listOf(meaning))
+		word = WordEntity(
+			word = newWOrd,
+			translations = listOf(meaning),
+			groupId = 1
+		)
 	)
 }

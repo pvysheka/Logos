@@ -1,4 +1,4 @@
-package com.example.logos.usecase
+package com.example.logos.usecase.word
 
 import com.example.logos.data.repositoty.DatabaseRepository
 import com.example.logos.data.storage.entity.WordEntity
