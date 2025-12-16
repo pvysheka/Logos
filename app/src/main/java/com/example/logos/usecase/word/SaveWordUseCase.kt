@@ -5,14 +5,15 @@ import com.example.logos.data.storage.entity.WordEntity
 import javax.inject.Inject
 
 class SaveWordUseCase @Inject constructor(
-	private val databaseRepository: DatabaseRepository
+    private val databaseRepository: DatabaseRepository
 ) {
 
-	suspend operator fun invoke(newWOrd: String, meaning: String) = databaseRepository.saveWord(
-		word = WordEntity(
-			word = newWOrd,
-			translations = listOf(meaning),
-			groupId = 1
-		)
-	)
+    suspend operator fun invoke(newWord: String, meaning: String, groupId: Long?) =
+        databaseRepository.saveWord(
+            word = WordEntity(
+                word = newWord,
+                translations = listOf(meaning),
+                groupId = groupId
+            )
+        )
 }

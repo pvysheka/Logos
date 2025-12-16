@@ -3,13 +3,12 @@ package com.example.logos.presentation.word.list
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.logos.data.repositoty.DatabaseRepository
 import com.example.logos.presentation.group.details.ARGUMENT_GROUP_ID
 import com.example.logos.usecase.word.FetchAllWordsUseCase
-import com.example.logos.usecase.word.FetchGroupWithWordsByIdUseCase
 import com.example.logos.usecase.word.FetchWordByGroupIdUseCase
 import com.example.logos.usecase.word.UpdateWordProgressUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -19,10 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WordsListViewModel @Inject constructor(
 	savedStateHandle: SavedStateHandle,
-	private val databaseRepository: DatabaseRepository,
 	private val fetchAllWordsUseCase: FetchAllWordsUseCase,
 	private val updateWordProgressUseCase: UpdateWordProgressUseCase,
-	private val fetchGroupWithWordsByIdUseCase: FetchGroupWithWordsByIdUseCase,
 	private val fetchWordByGroupIdUseCase: FetchWordByGroupIdUseCase
 ) : ViewModel() {
 
@@ -31,28 +28,19 @@ class WordsListViewModel @Inject constructor(
 
 	private val groupId: Long = savedStateHandle.get<Long>(ARGUMENT_GROUP_ID) ?: NO_GROUP_ID
 
+	private var wordsJob: Job? = null
+
 	init {
 		if (groupId.isValidGroupId()) {
-			fetchWords()
+			observeWords()
 		}
 	}
 
-	fun fetchWords() {
-		viewModelScope.launch {
-			if (groupId.isValidGroupId()) {
-				fetchWordByGroupIdUseCase(groupId).collect { words ->
-					_uiState.update { it.copy(words = words) }
-				}
-			}
-		}
-	}
-
-	fun fetchRandomWord() {
-		viewModelScope.launch {
-			//val word: WordEntity = databaseRepository.getRandomWordId(uiState.value.word)
-			fetchAllWordsUseCase().collect { words ->
-				_uiState.update { it.copy(words = words) }
-			}
+	fun rotateWords() {
+		_uiState.update { state ->
+			val words = state.words
+			if (words.size <= 1) return@update state
+			state.copy(words = words.drop(1) + words.first())
 		}
 	}
 
@@ -65,6 +53,20 @@ class WordsListViewModel @Inject constructor(
 	private fun updateWrongCount(value: Int) {
 		viewModelScope.launch {
 			uiState.value.words.firstOrNull()?.let { updateWordProgressUseCase(it, value) }
+		}
+	}
+
+	private fun observeWords() {
+		wordsJob?.cancel()
+		wordsJob = viewModelScope.launch {
+			val flow = if (groupId.isValidGroupId()) {
+				fetchWordByGroupIdUseCase(groupId)
+			} else {
+				fetchAllWordsUseCase()
+			}
+			flow.collect { words ->
+				_uiState.update { it.copy(words = words) }
+			}
 		}
 	}
 }

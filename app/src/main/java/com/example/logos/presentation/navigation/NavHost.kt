@@ -18,11 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.material3.MaterialTheme
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.logos.presentation.group.details.ARGUMENT_GROUP_ID
 import com.example.logos.presentation.word.list.wordsListScreen
 import com.example.logos.presentation.word.details.wordDetailsScreen
 import com.example.logos.presentation.group.list.groupsScreen
 import com.example.logos.presentation.group.new_group.NewGroupScreen
+import com.example.logos.presentation.word.list.isValidGroupId
 import com.example.logos.presentation.word.new_word.NewWordScreen
 import com.example.logos.ui.ExpandableFAB
 
@@ -33,6 +36,11 @@ fun LogosNavHost(navController: NavHostController = rememberNavController()) {
     val bottomSheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
     var sheetType by remember { mutableStateOf<SheetType?>(null) }
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentGroupId = backStackEntry
+        ?.arguments
+        ?.getLong(ARGUMENT_GROUP_ID)
+        ?.takeIf { it.isValidGroupId() }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -71,7 +79,10 @@ fun LogosNavHost(navController: NavHostController = rememberNavController()) {
         ) {
             when (sheetType) {
                 SheetType.GROUP -> NewGroupScreen(clickAction = { showBottomSheet = false })
-                SheetType.WORD -> NewWordScreen(clickAction = { showBottomSheet = false })
+                SheetType.WORD -> NewWordScreen(
+                    clickAction = { showBottomSheet = false },
+                    preselectedGroupId = currentGroupId
+                )
                 null -> Unit
             }
         }

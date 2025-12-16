@@ -11,12 +11,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +41,7 @@ import com.example.logos.ui.BaseScreenBox
 import com.example.logos.ui.card.SimpleWordCard
 import com.example.logos.ui.card.WordCard
 import com.example.logos.ui.theme.LogosTheme
+import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.wordsListScreen(
     navController: NavController
@@ -52,7 +57,7 @@ fun NavGraphBuilder.wordsListScreen(
 
         WordsListScreen(
             uiState = uiState,
-            nextWordAction = { viewModel.fetchRandomWord() },
+            nextWordAction = { viewModel.rotateWords() },
             navigateToDetailsAction = { navController.navigateToDetails(bundleOf(ARGUMENT_WORD_ID to uiState.words.first().id)) },
             correctClickAction = { viewModel.increaseCorrectCount() },
             wrongClickAction = { viewModel.increaseWrongCount() }
@@ -67,8 +72,14 @@ fun WordsListScreen(
     navigateToDetailsAction: () -> Unit,
     correctClickAction: () -> Unit = {},
     wrongClickAction: () -> Unit = {},
+    listState: LazyListState = rememberLazyListState(),
 ) {
     val topCard = uiState.words.firstOrNull()
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(topCard?.id) {
+        listState.animateScrollToItem(0)
+    }
 
     BaseScreenBox(
         modifier = Modifier
@@ -78,7 +89,9 @@ fun WordsListScreen(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyColumn {
+            LazyColumn(
+                state = listState
+            ) {
                 itemsIndexed(uiState.words, key = { _, word -> word.id }) { index, word ->
                     val isTopCard = index == 0
                     AnimatedVisibility(
@@ -94,12 +107,18 @@ fun WordsListScreen(
 									.height(80.dp),
                                 detailsClickAction = navigateToDetailsAction,
                                 correctClickAction = {
-                                    correctClickAction()
-                                    nextWordAction()
+                                    scope.launch {
+                                        correctClickAction()
+                                        nextWordAction()
+                                        listState.animateScrollToItem(0)
+                                    }
                                 },
                                 wrongClickAction = {
-                                    wrongClickAction()
-                                    nextWordAction()
+                                    scope.launch {
+                                        wrongClickAction()
+                                        nextWordAction()
+                                        listState.animateScrollToItem(0)
+                                    }
                                 },
                             )
                         } else {
@@ -110,7 +129,6 @@ fun WordsListScreen(
             }
         }
     }
-
 }
 
 @Composable
